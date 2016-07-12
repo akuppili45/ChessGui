@@ -38,6 +38,8 @@ def labelLetters():
     letterLabelX = 490
     letterLabelY = 755#constant
     lettersOfAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    for l in range(8):
+        labelList = Label(text = lettersOfAlphabet[l])
         labelList.place(x = letterLabelX, y = letterLabelY)
         letterLabelX += 80
 labelNumbers()
