@@ -1,54 +1,45 @@
 from tkinter import *
 root = Tk()
-x = 300
+x = 450
+initialY = 95
 y = 95
 w = 80
 h = 80
-'''
-newCanvas = Canvas(root, width=w, height=h)
-#newCanvas.pack()
-newCanvas.place(x = x, y = y)
-box = newCanvas.create_rectangle(0, 0, w, h, fill = 'black')
-anotherCanvas = Canvas(root, width = w, height = h)
-#anotherCanvas.pack()
-anotherCanvas.place(x =x, y = 175)
-box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='white')
-'''
-'''
-for i in range(4):
-    newCanvas = Canvas(root, width=w, height=h)
-    newCanvas.place(x=x, y=y)
-    box = newCanvas.create_rectangle(0, 0, w, h, fill='white')
-    anotherCanvas = Canvas(root, width=w, height=h)
-    anotherCanvas.place(x=x, y=y+80)
-    box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='black')
-    y+=160
-'''
-'''
-a = Canvas(root, width = w, height = h)
-a.place(x = x+80, y = 95)
-b = a.create_rectangle(0,0,w,h,fill="orange")
-'''
-'''
-for next in range(4):
-    newCanvas = Canvas(root, width=w, height=h)
-    newCanvas.place(x=x+80, y=y)
-    box = newCanvas.create_rectangle(0, 0, w, h, fill='white')
-    anotherCanvas = Canvas(root, width=w, height=h)
-    anotherCanvas.place(x=x+80, y=y+80)
-    box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='black')
-    y+=160
-'''
-for grid in range(8):
+header = Label(text = "Chess_py", anchor = CENTER, font = "TimesNewRoman")
+header.pack()
+for row in range(4):
     for i in range(4):
         newCanvas = Canvas(root, width=w, height=h)
         newCanvas.place(x=x, y=y)
         box = newCanvas.create_rectangle(0, 0, w, h, fill='white')
         anotherCanvas = Canvas(root, width=w, height=h)
-        anotherCanvas.place(x=x, y=y + 80)
+        anotherCanvas.place(x=x, y=y + h)
         box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='black')
-        y += 160
-    x+=80
-    y=95
-
+        newCanvas = Canvas(root, width=w, height=h)
+        newCanvas.place(x=x+w, y=y)
+        box2 = newCanvas.create_rectangle(0, 0, w, h, fill='black')
+        anotherCanvas = Canvas(root, width=w, height=h)
+        anotherCanvas.place(x=x+w, y=y + h)
+        box3 = anotherCanvas.create_rectangle(0, 0, w, h, fill='white')
+        y += 2*h
+    x += 2*w
+    y = initialY
+def labelNumbers():
+    labelX = 400
+    # middle of the canvas
+    initialLabelY = 135
+    xy = 8
+    for num in range(8):
+        numLabel = Label(text = str(xy))
+        numLabel.place(x = labelX, y = initialLabelY)
+        initialLabelY += 80
+        xy-=1
+def labelLetters():
+    letterLabelX = 490
+    letterLabelY = 755#constant
+    lettersOfAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        labelList.place(x = letterLabelX, y = letterLabelY)
+        letterLabelX += 80
+labelNumbers()
+labelLetters()
 root.mainloop()
