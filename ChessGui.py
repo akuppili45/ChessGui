@@ -1,54 +1,87 @@
-from tkinter import *
+from tkinter import*
 root = Tk()
-x = 300
-y = 95
+initialY = 95
 w = 80
 h = 80
-'''
-newCanvas = Canvas(root, width=w, height=h)
-#newCanvas.pack()
-newCanvas.place(x = x, y = y)
-box = newCanvas.create_rectangle(0, 0, w, h, fill = 'black')
-anotherCanvas = Canvas(root, width = w, height = h)
-#anotherCanvas.pack()
-anotherCanvas.place(x =x, y = 175)
-box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='white')
-'''
-'''
-for i in range(4):
-    newCanvas = Canvas(root, width=w, height=h)
-    newCanvas.place(x=x, y=y)
-    box = newCanvas.create_rectangle(0, 0, w, h, fill='white')
-    anotherCanvas = Canvas(root, width=w, height=h)
-    anotherCanvas.place(x=x, y=y+80)
-    box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='black')
-    y+=160
-'''
-'''
-a = Canvas(root, width = w, height = h)
-a.place(x = x+80, y = 95)
-b = a.create_rectangle(0,0,w,h,fill="orange")
-'''
-'''
-for next in range(4):
-    newCanvas = Canvas(root, width=w, height=h)
-    newCanvas.place(x=x+80, y=y)
-    box = newCanvas.create_rectangle(0, 0, w, h, fill='white')
-    anotherCanvas = Canvas(root, width=w, height=h)
-    anotherCanvas.place(x=x+80, y=y+80)
-    box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='black')
-    y+=160
-'''
-for grid in range(8):
-    for i in range(4):
-        newCanvas = Canvas(root, width=w, height=h)
-        newCanvas.place(x=x, y=y)
-        box = newCanvas.create_rectangle(0, 0, w, h, fill='white')
-        anotherCanvas = Canvas(root, width=w, height=h)
-        anotherCanvas.place(x=x, y=y + 80)
-        box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='black')
-        y += 160
-    x+=80
-    y=95
+header = Label(text = "Chess_py", anchor = CENTER, font = "TimesNewRoman")
+header.pack()
+wpobj = PhotoImage(file = "BlackPawn.PNG")
+def line_up_pawns():
+    white_pawnX = 410
+    white_pawnY = 615
+    for we_is in range(8):
+        white_pawn = Label(root, image=wpobj)
+        white_pawn.place(x=white_pawnX, y = white_pawnY)
+        white_pawnX += 80
+def create_alternating_color_grid(num_of_squares_per_side):
+    x = 450
+    y = 95
+    for row in range(int(num_of_squares_per_side/2)):
+        for i in range(int(num_of_squares_per_side/2)):
+            newCanvas = Canvas(root, width=w, height=h)
+            newCanvas.place(x=x, y=y)
+            box = newCanvas.create_rectangle(0, 0, w, h, fill='bisque')
+            anotherCanvas = Canvas(root, width=w, height=h)
+            anotherCanvas.place(x=x, y=y + h)
+            box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='salmon4')
+            newCanvas = Canvas(root, width=w, height=h)
+            newCanvas.place(x=x+w, y=y)
+            box2 = newCanvas.create_rectangle(0, 0, w, h, fill='salmon4')
+            anotherCanvas = Canvas(root, width=w, height=h)
+            anotherCanvas.place(x=x+w, y=y + h)
+            box3 = anotherCanvas.create_rectangle(0, 0, w, h, fill='bisque')
+            y += 2*h
+        x += 2*w
+        y = initialY
+def labelNumbers():
+    labelX = 400
+    # middle of the canvas
+    initialLabelY = 135
+    xy = 8
+    for num in range(8):
+        numLabel = Label(text = str(xy))
+        numLabel.place(x = labelX, y = initialLabelY)
+        initialLabelY += 80
+        xy-=1
+def labelLetters():
+    letterLabelX = 490
+    letterLabelY = 755#constant
+    lettersOfAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    for l in range(8):
+        labelList = Label(text = lettersOfAlphabet[l])
+        labelList.place(x = letterLabelX, y = letterLabelY)
+        letterLabelX += 80
+def drag_and_drop(event):
+    print()
+    '''
+    def __init__(self, num_of_squares_per_side,size):
+        self.initialY = 95
+        self.x = 450
+        self.y = 95
 
+        for row in range(int(num_of_squares_per_side / 2)):
+            for i in range(int(num_of_squares_per_side / 2)):
+                newCanvas = Canvas(root, width=size, height=size)
+                newCanvas.place(x=self.x, y=self.y)
+                box = newCanvas.create_rectangle(0, 0, size, size, fill='bisque')
+                anotherCanvas = Canvas(root, width=size, height=size)
+                anotherCanvas.place(x=self.x, y=self.y + size)
+                box1 = anotherCanvas.create_rectangle(0, 0, size, size, fill='salmon4')
+                newCanvas = Canvas(root, width=size, height=size)
+                newCanvas.place(x=self.x + size, y=self.y)
+                box2 = newCanvas.create_rectangle(0, 0, size,size, fill='salmon4')
+                anotherCanvas = Canvas(root, width=size, height=size)
+                anotherCanvas.place(x=self.x + size, y=self.y + size)
+                box3 = anotherCanvas.create_rectangle(0, 0, size, size, fill='bisque')
+                self.y += 2 * size
+            self.x += 2 * size
+            self.y = self.initialY
+            self.labelLetters()
+            self.labelNumbers()
+            newCanvas.bind("B1-Motion", self.resize_board)
+'''
+create_alternating_color_grid(8)
+line_up_pawns()
+labelNumbers()
+labelLetters()
 root.mainloop()
