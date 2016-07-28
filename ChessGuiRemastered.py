@@ -13,20 +13,11 @@ class Chessboard:
     y = 95
     widgetX = 100
     widgetY = 30
-    button_rel = False
-    button_releaseX = 0
-    button_releaseY = 0
-    button_releaseX2 = 0
-    button_releaseY2 = 0
-    def height_change(self):
-        return self.distance(self.button_releaseX2, self.button_releaseX2, self.button_releaseY2, self.button_releaseY)
-    def width_change(self):
-        return self.distance(self.button_releaseX2, self.button_releaseX, self.button_releaseY, self.button_releaseY)
-    def distance(self, x,y,x1,y1):
-        changeX = x - x1
-        changeY = y - y1
-        distance = math.sqrt((changeX * changeX) + (changeY * changeY))
-        return distance
+
+
+
+
+    '''
     def get_hypotenuse(self):
         global button_releaseX
         global button_releaseY
@@ -34,20 +25,18 @@ class Chessboard:
         global button_releaseY2
         hypotenuse = self.distance(self.button_releaseX,self.button_releaseY,self.button_releaseX2,self.button_releaseY2)
         return hypotenuse
-    def button_released(self,event):
-        global button_releaseX
-        global button_releaseY
-        self.button_releaseX = event.x
-        self.button_releaseY = event.y
-        button_rel = True
-        self.get_hypotenuse()
-        print(self.get_hypotenuse())
-
-    def get_coordinates(self, event):
-        global button_releaseX2
-        global button_releaseY2
-        self.button_releaseX2 = event.x
-        self.button_releaseY2 = event.y
+    '''
+    # def button_released(self,event):
+    #     global button_releaseX
+    #     global button_releaseY
+    #     self.button_releaseX = event.x
+    #     self.button_releaseY = event.y
+    #
+    # def button_pressed(self, event):
+    #     global button_releaseX2
+    #     global button_releaseY2
+    #     self.button_releaseX2 = event.x
+    #     self.button_releaseY2 = event.y
 
 
     def labelNumbers(self):
@@ -69,35 +58,59 @@ class Chessboard:
             labelList = Label(text=self.lettersOfAlphabet[l])
             labelList.place(x=self.letterLabelX, y=self.letterLabelY)
             self.letterLabelX += 80
-    def resize_board(self, event):
-        if(event.x == self.x and event.y ==self.y):
-            print()
 
-
-    def __init__(self, num_of_squares_per_side, size):
+    def __init__(self, num_of_squares_per_side, w, h):
             self.initialY = 95
+            resize = Resize()
             for row in range(int(num_of_squares_per_side / 2)):
                 for i in range(int(num_of_squares_per_side / 2)):
-                    newCanvas = Canvas(root, width=size, height=size)
+                    newCanvas = Canvas(root, width=w, height=h)
                     newCanvas.place(x=self.x, y=self.y)
-                    box = newCanvas.create_rectangle(0, 0, size, size, fill='bisque')
-                    anotherCanvas = Canvas(root, width=size, height=size)
-                    anotherCanvas.place(x=self.x, y=self.y + size)
-                    box1 = anotherCanvas.create_rectangle(0, 0, size, size, fill='salmon4')
-                    newCanvas = Canvas(root, width=size, height=size)
-                    newCanvas.place(x=self.x + size, y=self.y)
-                    box2 = newCanvas.create_rectangle(0, 0, size, size, fill='salmon4')
-                    anotherCanvas = Canvas(root, width=size, height=size)
-                    anotherCanvas.place(x=self.x + size, y=self.y + size)
-                    box3 = anotherCanvas.create_rectangle(0, 0, size, size, fill='bisque')
-                    self.y += 2 * size
-                self.x += 2 * size
+                    box = newCanvas.create_rectangle(0, 0, w, h, fill='bisque')
+                    anotherCanvas = Canvas(root, width=w, height=h)
+                    anotherCanvas.place(x=self.x, y=self.y + h)
+                    box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='salmon4')
+                    newCanvas = Canvas(root, width=w, height=h)
+                    newCanvas.place(x=self.x + w, y=self.y)
+                    box2 = newCanvas.create_rectangle(0, 0, w, h, fill='salmon4')
+                    anotherCanvas = Canvas(root, width=w, height=h)
+                    anotherCanvas.place(x=self.x + w, y=self.y + h)
+                    box3 = anotherCanvas.create_rectangle(0, 0, w, h, fill='bisque')
+                    self.y += 2 * h
+                self.x += 2 * w
                 self.y = self.initialY
                 self.labelLetters()
                 self.labelNumbers()
-main_board = Chessboard(8,80)
-root.bind("<Button-1>", main_board.get_coordinates)
-root.bind("<ButtonRelease-1>", main_board.button_released)
+            root.bind("<Button-1>", resize.get_button_click_coordinates)
+
+
+class Resize:
+    def distance(self, x, y, x1, y1):
+        changeX = x - x1
+        changeY = y - y1
+        distance = math.sqrt((changeX * changeX) + (changeY * changeY))
+        return distance
+
+    def resize(self, event, canvas_width, canvas_height):
+        height_change = self.distance(event.x, event.y, event.x, self.get_button_click_coordinates()[1])
+        width_change = self.distance(event.x, self.get_button_click_coordinates()[1], self.get_button_click_coordinates()[0], self.get_button_click_coordinates()[1])
+        total_width = 8*canvas_width
+        total_height=8*canvas_height
+        total_width += total_width+2*width_change
+        total_height+= total_height+2*height_change
+        new_canvas_width = total_width/8
+        new_canvas_height = total_height/8
+        changesize = [new_canvas_width, new_canvas_height]
+
+
+    def get_button_click_coordinates(self, event):
+        coord = [event.x, event.y]
+        return coord
+ 
+
+
+main_board = Chessboard(8,80,80)
+
 
 
 root.mainloop()
