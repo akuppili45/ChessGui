@@ -6,111 +6,59 @@ TODO:
     - fix transparencies in gimp
 '''
 from tkinter import *
-import math
-root = Tk()
+import ctypes
+window = Tk()
+window.resizable(width=False, height=False)
+
+
+'''
+Labels and Creates the grid
+'''
+
+user32 = ctypes.windll.user32
+window.geometry(str(int(user32.GetSystemMetrics(0) / 2)) + "x" + str(user32.GetSystemMetrics(1)))
+
 class Chessboard:
-    x = 450
-    y = 95
-    widgetX = 100
-    widgetY = 30
+    screen_height = window.winfo_screenheight()
 
-
-
-
+    xBoardLocation = 30
+    yBoardLocation = 30
+    canvasArray = [[Canvas for i in range(8)] for j in range(8)]
     '''
-    def get_hypotenuse(self):
-        global button_releaseX
-        global button_releaseY
-        global button_releaseX2
-        global button_releaseY2
-        hypotenuse = self.distance(self.button_releaseX,self.button_releaseY,self.button_releaseX2,self.button_releaseY2)
-        return hypotenuse
+    Creates a canvas of a certain length and with.
     '''
-    # def button_released(self,event):
-    #     global button_releaseX
-    #     global button_releaseY
-    #     self.button_releaseX = event.x
-    #     self.button_releaseY = event.y
-    #
-    # def button_pressed(self, event):
-    #     global button_releaseX2
-    #     global button_releaseY2
-    #     self.button_releaseX2 = event.x
-    #     self.button_releaseY2 = event.y
+
+    def __init__(self, num_squares, box_length):
+        # resize = Resize()
+        for row in range(int(num_squares)):
+            for col in range(int(num_squares)):
+                block = Canvas(window, width=box_length, height=box_length)
+                block.place(x=self.xBoardLocation + row * box_length, y=self.yBoardLocation + col * box_length)
+                if (col + row) % 2 == 0:
+                    block.create_rectangle(0, 0, box_length, box_length, fill='bisque')
+                else:
+                    block.create_rectangle(0, 0, box_length, box_length, fill='salmon4')
+                self.canvasArray[row][col] = block
+            self.label_board_letters(num_squares, box_length)
+            self.label_board_num(num_squares, box_length)
+
+    def label_board_num(self, num_squares, box_length):
+        x_pos = self.xBoardLocation - box_length / 4
+        y_pos = self.yBoardLocation + box_length / 4  # constant
+        for pos in range(num_squares):
+            Label(text=(num_squares - pos)).place(x=x_pos, y=y_pos)
+            y_pos += box_length
+
+    def label_board_letters(self, num_squares, box_length):
+        board_constant = 5 / 4
+        x_pos = self.xBoardLocation + box_length / 4
+        y_pos = self.yBoardLocation + (num_squares - 1 + board_constant) * box_length  # constant
+        letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        for pos in range(num_squares):
+            Label(text=letters[pos]).place(x=x_pos, y=y_pos)
+            x_pos += box_length
 
 
-    def labelNumbers(self):
-        self.labelX = 400
-        # middle of the canvas
-        self.initialLabelY = 135
-        self.xy = 8
-        for num in range(8):
-            numLabel = Label(text=str(self.xy))
-            numLabel.place(x=self.labelX, y=self.initialLabelY)
-            self.initialLabelY += 80
-            self.xy -= 1
+main_board = Chessboard(8, 80)
 
-    def labelLetters(self):
-        self.letterLabelX = 490
-        self.letterLabelY = 755  # constant
-        self.lettersOfAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-        for l in range(8):
-            labelList = Label(text=self.lettersOfAlphabet[l])
-            labelList.place(x=self.letterLabelX, y=self.letterLabelY)
-            self.letterLabelX += 80
-
-    def __init__(self, num_of_squares_per_side, w, h):
-            self.initialY = 95
-            resize = Resize()
-            for row in range(int(num_of_squares_per_side / 2)):
-                for i in range(int(num_of_squares_per_side / 2)):
-                    newCanvas = Canvas(root, width=w, height=h)
-                    newCanvas.place(x=self.x, y=self.y)
-                    box = newCanvas.create_rectangle(0, 0, w, h, fill='bisque')
-                    anotherCanvas = Canvas(root, width=w, height=h)
-                    anotherCanvas.place(x=self.x, y=self.y + h)
-                    box1 = anotherCanvas.create_rectangle(0, 0, w, h, fill='salmon4')
-                    newCanvas = Canvas(root, width=w, height=h)
-                    newCanvas.place(x=self.x + w, y=self.y)
-                    box2 = newCanvas.create_rectangle(0, 0, w, h, fill='salmon4')
-                    anotherCanvas = Canvas(root, width=w, height=h)
-                    anotherCanvas.place(x=self.x + w, y=self.y + h)
-                    box3 = anotherCanvas.create_rectangle(0, 0, w, h, fill='bisque')
-                    self.y += 2 * h
-                self.x += 2 * w
-                self.y = self.initialY
-                self.labelLetters()
-                self.labelNumbers()
-            root.bind("<Button-1>", resize.get_button_click_coordinates)
-
-
-class Resize:
-    def distance(self, x, y, x1, y1):
-        changeX = x - x1
-        changeY = y - y1
-        distance = math.sqrt((changeX * changeX) + (changeY * changeY))
-        return distance
-
-    def resize(self, event, canvas_width, canvas_height):
-        height_change = self.distance(event.x, event.y, event.x, self.get_button_click_coordinates()[1])
-        width_change = self.distance(event.x, self.get_button_click_coordinates()[1], self.get_button_click_coordinates()[0], self.get_button_click_coordinates()[1])
-        total_width = 8*canvas_width
-        total_height=8*canvas_height
-        total_width += total_width+2*width_change
-        total_height+= total_height+2*height_change
-        new_canvas_width = total_width/8
-        new_canvas_height = total_height/8
-        changesize = [new_canvas_width, new_canvas_height]
-
-
-    def get_button_click_coordinates(self, event):
-        coord = [event.x, event.y]
-        return coord
- 
-
-
-main_board = Chessboard(8,80,80)
-
-
-
-root.mainloop()
+window.mainloop()
