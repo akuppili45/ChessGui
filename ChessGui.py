@@ -1,26 +1,27 @@
-'''
+"""
 TODO:
     - fix hardcoding
     - make the board resizeable
     - make the letters and numbers resizeable to the same scale as the board
     - fix transparencies in gimp
-'''
+"""
 from tkinter import *
-import ctypes
+import itertools
+
 
 window = Tk()
-window.resizable(width=False, height=False)
+#window.resizable(width=False, height=False)
 
 '''
 Labels and Creates the grid
 '''
 
-user32 = ctypes.windll.user32
-window.geometry(str(int(user32.GetSystemMetrics(0) / 2)) + "x" + str(user32.GetSystemMetrics(1)))
+#user32 = ctypes.windll.user32
+#window.geometry(str(int(user32.GetSystemMetrics(0) / 2)) + "x" + str(user32.GetSystemMetrics(1)))
 
 
 class Chessboard:
-    screen_height = window.winfo_screenheight()
+
 
     xBoardLocation = 30
     yBoardLocation = 30
@@ -30,20 +31,30 @@ class Chessboard:
     '''
 
     def __init__(self, num_squares, box_length):
-        # resize = Resize()
-        for row in range(int(num_squares)):
-            for col in range(int(num_squares)):
+        """
+        Initializes a chessboard
+        :param num_squares: number of squares long
+        :param box_length: length of a single square
+        """
+        colors = ['bisque', 'salmon4']
+        colors = itertools.cycle(colors)
+        for row in range(num_squares):
+            for col in range(num_squares):
                 block = Canvas(window, width=box_length, height=box_length)
                 block.place(x=self.xBoardLocation + row * box_length, y=self.yBoardLocation + col * box_length)
-                if (col + row) % 2 == 0:
-                    block.create_rectangle(0, 0, box_length, box_length, fill='bisque')
-                else:
-                    block.create_rectangle(0, 0, box_length, box_length, fill='salmon4')
+                block.create_rectangle(0, 0, box_length, box_length, fill=next(colors))
                 self.canvasArray[row][col] = block
+
+            next(colors)
             self.label_board_letters(num_squares, box_length)
             self.label_board_num(num_squares, box_length)
 
     def label_board_num(self, num_squares, box_length):
+        """
+        Labels ranks
+        :param num_squares: number of squares
+        :param box_length: length of each square
+        """
         x_pos = self.xBoardLocation - box_length / 4
         y_pos = self.yBoardLocation + box_length / 4  # constant
         for pos in range(num_squares):
@@ -51,6 +62,11 @@ class Chessboard:
             y_pos += box_length
 
     def label_board_letters(self, num_squares, box_length):
+        """
+        Labels files
+        :param num_squares: number of squares
+        :param box_length: length of each square
+        """
         board_constant = 5 / 4
         x_pos = self.xBoardLocation + box_length / 4
         y_pos = self.yBoardLocation + (num_squares - 1 + board_constant) * box_length  # constant
@@ -59,6 +75,10 @@ class Chessboard:
             Label(text=letters[pos]).place(x=x_pos, y=y_pos)
             x_pos += box_length
 
-main_board = Chessboard(8, 80)
+def main():
+    main_board = Chessboard(8, 80)
+    window.mainloop()
 
-window.mainloop()
+if __name__ == "__main__":
+    main()
+
