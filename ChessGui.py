@@ -1,28 +1,15 @@
-"""
-TODO:
-    - fix hardcoding
-    - make the board resizeable
-    - make the letters and numbers resizeable to the same scale as the board
-    - fix transparencies in gimp
-"""
 from tkinter import *
 import itertools
 
-
 window = Tk()
-#window.resizable(width=False, height=False)
+window.resizable(width=False, height=False)
 
 '''
 Labels and Creates the grid
 '''
 
-#user32 = ctypes.windll.user32
-#window.geometry(str(int(user32.GetSystemMetrics(0) / 2)) + "x" + str(user32.GetSystemMetrics(1)))
-
 
 class Chessboard:
-
-
     xBoardLocation = 30
     yBoardLocation = 30
     canvasArray = [[Canvas for i in range(8)] for j in range(8)]
@@ -36,6 +23,8 @@ class Chessboard:
         :param num_squares: number of squares long
         :param box_length: length of a single square
         """
+        dimension = str(box_length * (num_squares + 1))
+        window.geometry(dimension + "x" + dimension)
         colors = ['bisque', 'salmon4']
         colors = itertools.cycle(colors)
         for row in range(num_squares):
@@ -75,10 +64,11 @@ class Chessboard:
             Label(text=letters[pos]).place(x=x_pos, y=y_pos)
             x_pos += box_length
 
+
 def main():
     main_board = Chessboard(8, 80)
     window.mainloop()
 
+
 if __name__ == "__main__":
     main()
-
